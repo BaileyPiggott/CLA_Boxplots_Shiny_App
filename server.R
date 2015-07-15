@@ -3,7 +3,6 @@
 # CLA data boxplots
 #server logic
 
-
 source("set_up.R") # load libraries and set up dataframes for each discipline
 
 shinyServer(function(input, output) {
@@ -13,22 +12,27 @@ shinyServer(function(input, output) {
     if(input$discipline == 2){
       df <- rbind(psyc, fix)
       graph_title = "Psychology CLA Scores"
+      prog_name = "Psychology"
     }
     else if(input$discipline == 3){
       df <- rbind(dram, fix)
       graph_title = "Drama CLA Scores"
+      prog_name = "Drama"
     }
     else if(input$discipline == 4){
       df <- rbind(eng, fix)
       graph_title = "Engineering CLA Scores"
+      prog_name = "Engineering"
     } 
     else if(input$discipline == 5){
       df <- rbind(phys, fix)
       graph_title = "Physics CLA Scores"
+      prog_name = "Physics"
     } 
     else{
       df <- queens
       graph_title = "CLA Scores"
+      prog_name = "Queen's"
     }
     
     
@@ -45,23 +49,26 @@ shinyServer(function(input, output) {
     n_4 <-  sum(with(df, class ==4 & score_total > 1), na.rm = TRUE)     
     year4 <- paste0("Fourth Year\nn = ", n_4) #text string for xlabel
     
+    df <- rbind(df, queens) # combine with all queens data
+    
     
     ## plot description
     ggplot(
       data = df, 
-      aes(x = as.factor(class), y = score_total)
+      aes(x = as.factor(class), y = score_total, fill = Subject)
       ) +
       geom_hline(
         yintercept = c(963, 1097, 1232, 1367),  #boundaries for CLA mastery levels 
         colour = "red", 
         linetype = 'dashed'
       ) +
-      stat_boxplot(geom = 'errorbar', stat_params = list(width = 0.3)) + # add perpendicular lines to whiskers
-      geom_boxplot(
-        width = 0.5
-        ) + # geom_boxplot must be after stat_boxplot    
+      geom_boxplot(width = 0.5) +    
       coord_cartesian(xlim = c(0.5,5.9),ylim = c(600, 1600)) +
       scale_x_discrete(labels = c(year1, year2, year3, year4)) + #text strings from above with sample sizes
+      scale_fill_manual(
+        values =  c("darkgoldenrod1", "steelblue3"),
+        labels = c(prog_name, "Queen's")
+        )+
       theme(
         panel.border = element_rect(colour = "grey", fill = NA), #add border around graph
         panel.grid.major.y = element_line("grey"), #change horizonatal line colour (from white)
