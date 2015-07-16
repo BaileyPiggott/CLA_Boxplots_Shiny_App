@@ -1,4 +1,5 @@
 
+
 library(shiny)
 library(ggplot2)
 library(tidyr)
@@ -31,17 +32,22 @@ phys_1 <- cla %>% semi_join(phys100_list, by = "studentid") %>% mutate(Subject =
 phys_2 <- cla %>% semi_join(phys239_list, by = "studentid") %>% mutate(Subject = "PHYS")# second year physics
 phys <- rbind(phys_1, phys_2) %>% filter(class == 1) #right now there is only three 2nd year samples
 
-
-
-#some programs do not have data in some years
-#need to add null scores for each year so plots work properly
-fix <- data.frame(c(NA,NA,NA,NA),c(1,2,3,4),c(NA,NA,NA,NA),c(NA,NA,NA,NA),c(NA,NA,NA,NA))
-colnames(fix) <- colnames(eng)
-
 # all queens students and sample sizes
-queens <- cla  %>% mutate(Subject = "QUEENS") %>% rbind(fix)# all students
+queens <- cla  %>% mutate(Subject = "QUEENS") # all students
 
 n_q_1 <-  sum(with(queens, class == 1 & score_total > 1), na.rm = TRUE)  
 n_q_2 <-  sum(with(queens, class == 2 & score_total > 1), na.rm = TRUE) 
 n_q_3 <-  sum(with(queens, class == 3 & score_total > 1), na.rm = TRUE) 
 n_q_4 <-  sum(with(queens, class == 4 & score_total > 1), na.rm = TRUE) 
+
+#some programs do not have data in some years
+#need to add null scores for each year so plots work properly
+fix <- data.frame(c(NA,NA,NA,NA),c(1,2,3,4),c(NA,NA,NA,NA),c(NA,NA,NA,NA),c(NA,NA,NA,NA))
+colnames(fix) <- colnames(queens)
+
+# dummy entries with scores outside plot range so box widths are correct
+dummy_2 <- data.frame(NA, 2, 60, NA,NA) # fake data for 2nd year
+colnames(dummy_2) <- colnames(queens)
+
+dummy_4 <- data.frame(NA, 4, 60, NA,NA) # fake data for 4th year 
+colnames(dummy_4) <- colnames(queens)

@@ -5,6 +5,8 @@
 
 source("set_up.R") # load libraries and set up dataframes for each discipline
 
+
+
 shinyServer(function(input, output) {
   
   output$claPlot <- renderPlot({
@@ -13,26 +15,31 @@ shinyServer(function(input, output) {
       df <- rbind(psyc, fix)
       graph_title = "Psychology CLA Scores"
       prog_name = "Psychology"
+      dummy <- dummy_4 %>% mutate(Subject = "PSYC") # missing 4th year
     }
     else if(input$discipline == 3){
       df <- rbind(dram, fix)
       graph_title = "Drama CLA Scores"
       prog_name = "Drama"
+      dummy <- rbind(dummy_2, dummy_4) %>% mutate(Subject = "DRAM") # missing 2nd and 4th year
     }
     else if(input$discipline == 4){
       df <- rbind(eng, fix)
       graph_title = "Engineering CLA Scores"
-      prog_name = "Engineering"
+      prog_name = "Engineering" 
+      dummy <- fix# not missing any years
     } 
     else if(input$discipline == 5){
       df <- rbind(phys, fix)
       graph_title = "Physics CLA Scores"
       prog_name = "Physics"
+      dummy <- rbind(dummy_2, dummy_4) %>% mutate(Subject = "PHYS") # missing 2nd and 4th year
     } 
     else{
       df <- fix # will be bound with queens after discipline specific sample sizes calculated
       graph_title = "CLA Scores"
       prog_name = "Queen's"
+      dummy <- fix# not missing any years
     }
     
     
@@ -47,8 +54,7 @@ shinyServer(function(input, output) {
     n_4 <-  sum(with(df, class == 4 & score_total >= 1), na.rm = TRUE)     
     year4 <- paste0("Fourth Year\nn = ", n_4, "   n = ", n_q_4) #text string for xlabel
     
-    df <- rbind(df, queens) # combine with all queens data
-    
+    df <- rbind(df, queens, fix, dummy) # combine with all queens data
     
     
     ## plot description
