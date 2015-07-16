@@ -30,26 +30,25 @@ shinyServer(function(input, output) {
       prog_name = "Physics"
     } 
     else{
-      df <- queens
+      df <- fix # will be bound with queens after discipline specific sample sizes calculated
       graph_title = "CLA Scores"
       prog_name = "Queen's"
     }
     
     
     #calculate sample sizes:
-    n_1 <-  sum(with(df, class ==1 & score_total > 1), na.rm = TRUE)     
-    year1 <- paste0("First Year\nn = ", n_1) #text string for xlabel including sample size
-    
-    n_2 <-  sum(with(df, class ==2 & score_total > 1), na.rm = TRUE)     
-    year2 <- paste0("Second Year\nn = ", n_2) #text string for xlabel
-    
-    n_3 <-  sum(with(df, class ==3 & score_total > 1), na.rm = TRUE)     
-    year3 <- paste0("Third Year\nn = ", n_3) #text string for xlabel
-    
-    n_4 <-  sum(with(df, class ==4 & score_total > 1), na.rm = TRUE)     
-    year4 <- paste0("Fourth Year\nn = ", n_4) #text string for xlabel
+    #calculate sample sizes:
+    n_1 <-  sum(with(df, class == 1 & score_total >= 1), na.rm = TRUE)     
+    year1 <- paste0("First Year\nn = ", n_1, "   n = ", n_q_1) #text string for xlabel including sample size
+    n_2 <-  sum(with(df, class == 2 & score_total >= 1), na.rm = TRUE)     
+    year2 <- paste0("Second Year\nn = ", n_2, "   n = ", n_q_2) #text string for xlabel
+    n_3 <-  sum(with(df, class == 3 & score_total >= 1), na.rm = TRUE)     
+    year3 <- paste0("Third Year\nn = ", n_3, "   n = ", n_q_3) #text string for xlabel
+    n_4 <-  sum(with(df, class == 4 & score_total >= 1), na.rm = TRUE)     
+    year4 <- paste0("Fourth Year\nn = ", n_4, "   n = ", n_q_4) #text string for xlabel
     
     df <- rbind(df, queens) # combine with all queens data
+    
     
     
     ## plot description
@@ -63,7 +62,7 @@ shinyServer(function(input, output) {
         linetype = 'dashed'
       ) +
       geom_boxplot(width = 0.5) +    
-      coord_cartesian(xlim = c(0.5,5.9),ylim = c(600, 1600)) +
+      coord_cartesian(xlim = c(0.5,5.9),ylim = c(600, 1650)) +
       scale_x_discrete(labels = c(year1, year2, year3, year4)) + #text strings from above with sample sizes
       scale_fill_manual(
         values =  c("darkgoldenrod1", "steelblue3"),
@@ -71,12 +70,14 @@ shinyServer(function(input, output) {
         )+
       theme(
         panel.border = element_rect(colour = "grey", fill = NA), #add border around graph
-        panel.grid.major.y = element_line("grey"), #change horizonatal line colour (from white)
         panel.background = element_rect("white"), #change background colour
         legend.position = "bottom", # position legend below graph
         legend.title = element_blank(), #remove legend title
         axis.title.x = element_blank(), # remove x axis title
-        axis.text.x = element_text(size = 12) #size of x axis labels
+        axis.text.x = element_text(size = 12), #size of x axis labels
+        panel.grid.major.x = element_blank(), # remove vertical lines
+        panel.grid.major.y = element_blank(), # remove horizontal lines
+        panel.grid.minor.y = element_blank()
       ) +
       labs(title = graph_title, x = "Year", y = "Total CLA+ Score") +
       annotate( # add labels for CLA mastery levels
