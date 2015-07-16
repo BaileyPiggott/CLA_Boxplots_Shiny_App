@@ -24,7 +24,7 @@ psyc <- rbind(psyc_1, psyc_2)
 
 dram_1 <- cla %>% semi_join(dram100_list, by = "studentid") %>% mutate(Subject = "DRAM") #first year drama
 dram_2 <- cla %>% semi_join(dram200_list, by = "studentid") %>% mutate(Subject = "DRAM")# second year drama
-dram <- rbind(dram_1, dram_2)
+dram <- rbind(dram_1, dram_2) %>% filter(class == 1) # there's only one 2nd year sample; remove it for now
 
 phys_1 <- cla %>% semi_join(phys100_list, by = "studentid") %>% mutate(Subject = "PHYS") #first year drama
 phys_2 <- cla %>% semi_join(phys239_list, by = "studentid") %>% mutate(Subject = "PHYS")# second year drama
