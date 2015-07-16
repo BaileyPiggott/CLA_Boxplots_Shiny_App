@@ -15,6 +15,7 @@ dram200_list = read.csv("DRAMA 200 Class List.csv")
 psyc203_list = read.csv("PSYC 203 Class List.csv")
 phys239_list = read.csv("PHYS 239 Class List.csv")
 
+
 ## set up data frames for each program and add column with program name
 eng <- cla %>% subset(major_primary == 11) %>% mutate(Subject = "APSC") 
 
@@ -24,11 +25,13 @@ psyc <- rbind(psyc_1, psyc_2)
 
 dram_1 <- cla %>% semi_join(dram100_list, by = "studentid") %>% mutate(Subject = "DRAM") #first year drama
 dram_2 <- cla %>% semi_join(dram200_list, by = "studentid") %>% mutate(Subject = "DRAM")# second year drama
-dram <- rbind(dram_1, dram_2) %>% filter(class == 1) # there's only one 2nd year sample; remove it for now
+dram <- rbind(dram_1, dram_2) %>% filter(class == 1) #right now there is only one 2nd year sample
 
-phys_1 <- cla %>% semi_join(phys100_list, by = "studentid") %>% mutate(Subject = "PHYS") #first year drama
-phys_2 <- cla %>% semi_join(phys239_list, by = "studentid") %>% mutate(Subject = "PHYS")# second year drama
-phys <- rbind(phys_1, phys_2)
+phys_1 <- cla %>% semi_join(phys100_list, by = "studentid") %>% mutate(Subject = "PHYS") #first year physics
+phys_2 <- cla %>% semi_join(phys239_list, by = "studentid") %>% mutate(Subject = "PHYS")# second year physics
+phys <- rbind(phys_1, phys_2) %>% filter(class == 1) #right now there is only three 2nd year samples
+
+
 
 #some programs do not have data in some years
 #need to add null scores for each year so plots work properly
