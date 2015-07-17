@@ -1,6 +1,9 @@
 # CLA_app_allprograms
 Shiny app of CLA boxplots for eng, psyc, phys, dram
 
+Published Shiny app: https://baileyp.shinyapps.io/CLA_Scores_by_Program_comparison
+
+
 Select discipline from dropdown menu and the app plots a boxplot of that program's CLA scores compared to the intstitutional level(all scores, including the chosen discipline)
 
 
